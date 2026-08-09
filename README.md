@@ -281,4 +281,4 @@ python3 01-onnx_model_test.py
 python3 02-evaluate_model_accuracy.py
 ```
 
-> **หมายเหตุ:** ควรตรวจสอบให้ค่า `IMG_SIZE` ในสคริปต์ inference ตรงกับค่า `imgsz` ที่ใช้ตอน export โมเดลเป็น ONNX เสมอ (ต้องเป็นตัวเลขที่หารด้วย 32 ลงตัว เช่น 320, 480) มิฉะนั้นจะเกิดข้อผิดพลาดที่ Concat layer
+> **หมายเหตุ:** ควรตรวจสอบให้ค่า `IMG_SIZE` ในตรงกับค่า `imgsz` ที่ใช้ตอน export โมเดลเป็น ONNX เสมอ 
