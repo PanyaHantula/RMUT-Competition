@@ -14,7 +14,7 @@
 **ส่วนที่ 1: การติดตั้งเครื่องคอมพิวเตอร์สำหรับการ Training Model**
 - [1. สิ่งที่ต้องเตรียมก่อนติดตั้ง](#1-สิ่งที่ต้องเตรียมก่อนติดตั้ง)
 - [2. ติดตั้ง VS Code](#2-ติดตั้ง-vs-code)
-- [3. ติดตั้ง Python 3.11](#3-ติดตั้ง-python-311)
+- [3. ติดตั้ง Python](#3-ติดตั้ง-python)
 - [4. สร้าง Virtual Environment](#4-สร้าง-virtual-environment)
 - [5. ติดตั้ง Python Packet-site](#5-ติดตั้ง-python-packet-site)
 - [6. ตั้งค่า Label Studio](#6-ตั้งค่า-label-studio)
@@ -39,8 +39,6 @@
 - สามารถเข้าถึง Terminal / Command Prompt ได้
 - พื้นที่ว่างในดิสก์ประมาณ 5 GB (สำหรับ dependencies และชุดข้อมูล)
 
-> **สำคัญ:** เครื่องคอมพิวเตอร์สำหรับการ Training Model ให้ติดตั้ง **Python 3.11** เพื่อให้ Label Studio ใช้งานได้
-
 ---
 
 ## 2. ติดตั้ง VS Code
@@ -50,7 +48,7 @@
 
 ---
 
-## 3. ติดตั้ง Python 3.11
+## 3. ติดตั้ง Python 
 
 ดาวน์โหลดและติดตั้งได้จากช่องทางใดช่องทางหนึ่ง:
 
@@ -70,7 +68,7 @@ python --version
 เปิด Command Prompt / Terminal แล้วสร้าง virtual environment โดยใช้ Python 3.11:
 
 ```bash
-python3.11 -m venv rmut-env
+python -m venv rmut-env
 ```
 
 เปิดใช้งาน (activate) environment:
