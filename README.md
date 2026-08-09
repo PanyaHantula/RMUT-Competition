@@ -60,7 +60,7 @@
 ตรวจสอบว่าติดตั้งสำเร็จ โดยเปิด Command Prompt / Terminal แล้วพิมพ์คำสั่ง:
 
 ```bash
-python3.11 --version
+python --version
 ```
 
 ---
