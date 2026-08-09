@@ -1,24 +1,37 @@
-# RMUT-Competition
-
 # การแข่งขันราชมงคลวิชาการวิศวกรรมระดับชาติ ครั้งที่ 17
+
 ## หัวข้อ "แข่งขันพัฒนาโมเดลปัญญาประดิษฐ์สำหรับอุปกรณ์ Raspberry Pi 5"
 
 # คู่มือการติดตั้งระบบ (Installation Guide)
 
-คู่มือนี้อธิบายขั้นตอนการติดตั้งสภาพแวดล้อมและการรัน pipeline ทั้งหมดของโปรเจกต์ ตั้งแต่การตั้งค่าสภาพแวดล้อม → การเก็บข้อมูล → การติด label → การเพิ่มข้อมูล (augmentation) → การเทรนโมเดล → การตรวจสอบผลลัพธ์ → การแปลงโมเดล
+คู่มือนี้แบ่งออกเป็น 2 ส่วนหลัก:
+
+- **ส่วนที่ 1** — การติดตั้งเครื่องคอมพิวเตอร์สำหรับการ Training Model
+- **ส่วนที่ 2** — การติดตั้งบน Raspberry Pi 5 (สำหรับรันโมเดลที่เทรนเสร็จแล้ว)
 
 ## สารบัญ
 
+**ส่วนที่ 1: การติดตั้งเครื่องคอมพิวเตอร์สำหรับการ Training Model**
 - [1. สิ่งที่ต้องเตรียมก่อนติดตั้ง](#1-สิ่งที่ต้องเตรียมก่อนติดตั้ง)
 - [2. ติดตั้ง VS Code](#2-ติดตั้ง-vs-code)
 - [3. ติดตั้ง Python 3.11](#3-ติดตั้ง-python-311)
 - [4. สร้าง Virtual Environment](#4-สร้าง-virtual-environment)
-- [5. ติดตั้งแพ็กเกจ Python](#5-ติดตั้งแพ็กเกจ-python)
+- [5. ติดตั้ง Python Packet-site](#5-ติดตั้ง-python-packet-site)
 - [6. ตั้งค่า Label Studio](#6-ตั้งค่า-label-studio)
-- [7. ขั้นตอนการทำงานของ Pipeline](#7-ขั้นตอนการทำงานของ-pipeline)
-- [หมายเหตุ](#หมายเหตุ)
+- [7. ตัวอย่าง Code Program สำหรับการเก็บข้อมูลและการ Training YOLO Model](#7-ตัวอย่าง-code-program-สำหรับการเก็บข้อมูลและการ-training-yolo-model)
+
+**ส่วนที่ 2: การติดตั้งบน Raspberry Pi 5**
+- [1. เข้าสู่ระบบ Raspberry Pi ผ่าน SSH](#1-เข้าสู่ระบบ-raspberry-pi-ผ่าน-ssh)
+- [2. อัปเดตระบบ และเปิดการตั้งค่า VNC](#2-อัปเดตระบบ-และเปิดการตั้งค่า-vnc)
+- [3. ติดตั้ง Python และไลบรารีที่จำเป็น](#3-ติดตั้ง-python-และไลบรารีที่จำเป็น)
+- [4. สร้าง Python Virtual Environment](#4-สร้าง-python-virtual-environment)
+- [5. ติดตั้ง Python Packet-Site](#5-ติดตั้ง-python-packet-site-1)
+- [6. ส่งไฟล์ .onnx จากเครื่องคอมพิวเตอร์ไปยัง Raspberry Pi](#6-ส่งไฟล์-onnx-จากเครื่องคอมพิวเตอร์ไปยัง-raspberry-pi)
+- [7. ทดสอบโมเดลบน Raspberry Pi](#7-ทดสอบโมเดลบน-raspberry-pi)
 
 ---
+
+# ส่วนที่ 1: การติดตั้งเครื่องคอมพิวเตอร์สำหรับการ Training Model
 
 ## 1. สิ่งที่ต้องเตรียมก่อนติดตั้ง
 
@@ -26,21 +39,25 @@
 - สามารถเข้าถึง Terminal / Command Prompt ได้
 - พื้นที่ว่างในดิสก์ประมาณ 5 GB (สำหรับ dependencies และชุดข้อมูล)
 
+> **สำคัญ:** เครื่องคอมพิวเตอร์สำหรับการ Training Model ให้ติดตั้ง **Python 3.11** เพื่อให้ Label Studio ใช้งานได้
+
 ---
 
 ## 2. ติดตั้ง VS Code
 
-ดาวน์โหลดและติดตั้ง VS Code จากเว็บไซต์ทางการ:
-[https://code.visualstudio.com/](https://code.visualstudio.com/)
+1. ดาวน์โหลดและติดตั้ง VS Code จากเว็บไซต์ทางการ: [https://code.visualstudio.com/](https://code.visualstudio.com/)
+2. ติดตั้ง **Python Extension** ให้เรียบร้อย
 
 ---
 
 ## 3. ติดตั้ง Python 3.11
 
-ดาวน์โหลดและติดตั้ง Python 3.11 จากเว็บไซต์ทางการ:
-[https://www.python.org/downloads/release/python-3110/](https://www.python.org/downloads/release/python-3110/)
+ดาวน์โหลดและติดตั้งได้จากช่องทางใดช่องทางหนึ่ง:
 
-ตรวจสอบว่าติดตั้งสำเร็จด้วยคำสั่ง:
+- เว็บไซต์ทางการ: [https://www.python.org/downloads/release/python-3110/](https://www.python.org/downloads/release/python-3110/)
+- หรือติดตั้งผ่าน **Microsoft Store** (สำหรับ Windows)
+
+ตรวจสอบว่าติดตั้งสำเร็จ โดยเปิด Command Prompt / Terminal แล้วพิมพ์คำสั่ง:
 
 ```bash
 python3.11 --version
@@ -50,7 +67,7 @@ python3.11 --version
 
 ## 4. สร้าง Virtual Environment
 
-สร้าง virtual environment โดยใช้ Python 3.11:
+เปิด Command Prompt / Terminal แล้วสร้าง virtual environment โดยใช้ Python 3.11:
 
 ```bash
 python3.11 -m venv rmut-env
@@ -75,7 +92,7 @@ rmut-env\Scripts\Activate.ps1
 
 ---
 
-## 5. ติดตั้งแพ็กเกจ Python
+## 5. ติดตั้ง Python Packet-site
 
 หลังจากเปิดใช้งาน virtual environment แล้ว ให้ติดตั้งแพ็กเกจที่จำเป็นดังนี้:
 
@@ -95,89 +112,167 @@ pip install label-studio
 
 ## 6. ตั้งค่า Label Studio
 
-ก่อนเปิดใช้งาน Label Studio ต้องตั้งค่าตัวแปรสภาพแวดล้อม (environment variables) เพื่อให้สามารถโหลดชุดข้อมูลขนาดใหญ่จากเครื่องได้อย่างถูกต้อง
+ก่อนเปิดใช้งาน Label Studio ต้องตั้งค่าตัวแปรสภาพแวดล้อม (environment variables) เพื่อให้สามารถโหลดชุดข้อมูลขนาดใหญ่จากเครื่องได้อย่างถูกต้อง เปิด Command Prompt / Terminal แล้วพิมพ์คำสั่ง:
 
-### macOS / Linux
-
+**macOS / Linux**
 ```bash
 export NLTK_DISABLE_IMPORT_SECURITY=1
-export DATA_UPLOAD_MAX_MEMORY_SIZE=1073741824
-export DATA_UPLOAD_MAX_NUMBER_FILES=100000
 export LABEL_STUDIO_LOCAL_FILES_SERVING_ENABLED=true
 export LABEL_STUDIO_LOCAL_FILES_DOCUMENT_ROOT=/Users/panya/Projects/RMUT/data
+label-studio start
 ```
 
-### Windows (Command Prompt)
-
+**Windows (Command Prompt)**
 ```cmd
 set NLTK_DISABLE_IMPORT_SECURITY=1
-set DATA_UPLOAD_MAX_MEMORY_SIZE=1073741824
-set DATA_UPLOAD_MAX_NUMBER_FILES=100000
 set LABEL_STUDIO_LOCAL_FILES_SERVING_ENABLED=true
 set LABEL_STUDIO_LOCAL_FILES_DOCUMENT_ROOT=C:\Users\panya\Projects\RMUT\data
+label-studio start
 ```
 
-### Windows (PowerShell)
-
+**Windows (PowerShell)**
 ```powershell
 $env:NLTK_DISABLE_IMPORT_SECURITY = "1"
-$env:DATA_UPLOAD_MAX_MEMORY_SIZE = "1073741824"
-$env:DATA_UPLOAD_MAX_NUMBER_FILES = "100000"
 $env:LABEL_STUDIO_LOCAL_FILES_SERVING_ENABLED = "true"
 $env:LABEL_STUDIO_LOCAL_FILES_DOCUMENT_ROOT = "C:\Users\panya\Projects\RMUT\data"
+label-studio start
 ```
 
-> **หมายเหตุ:** ตัวแปรสภาพแวดล้อมเหล่านี้จะมีผลเฉพาะใน terminal session ปัจจุบันเท่านั้น ต้องตั้งค่าใหม่ทุกครั้งที่เปิด terminal ใหม่ หรือเพิ่มเข้าไปใน shell profile (`.zshrc`, `.bashrc`) หรือ startup script เพื่อให้ค่าคงอยู่ถาวร
+> **หมายเหตุ:**
+> - ตัวแปรสภาพแวดล้อมเหล่านี้จะมีผลเฉพาะใน terminal session ปัจจุบันเท่านั้น ต้องตั้งค่าใหม่ทุกครั้งที่เปิด terminal ใหม่ หรือเพิ่มเข้าไปใน shell profile (`.zshrc`, `.bashrc`) หรือ startup script เพื่อให้ค่าคงอยู่ถาวร
+> - โหมดการนำเข้าข้อมูลใน Label Studio: ให้ใช้ **Local Files Storage** แทนการอัปโหลดไฟล์โดยตรง สำหรับชุดข้อมูลขนาดใหญ่
 
 ---
 
-## 7. ขั้นตอนการทำงานของ Pipeline
+## 7. ตัวอย่าง Code Program สำหรับการเก็บข้อมูลและการ Training YOLO Model
 
-รันสคริปต์ตามลำดับต่อไปนี้ โดยต้องเปิดใช้งาน virtual environment ไว้ก่อน
-
-| ขั้นตอน | สคริปต์ | คำอธิบาย |
-|------|--------|-------------|
-| 6  | `00-videorecord.py` | บันทึกวิดีโอต้นฉบับสำหรับชุดข้อมูล |
-| 7  | `01-video_extraction.py` | ดึงเฟรม/ภาพจากวิดีโอที่บันทึกไว้ |
-| 8  | `label-studio` | เปิดใช้งาน Label Studio และติด label ภาพ**ทั้งหมด**ในชุดข้อมูล |
-| 9  | `03-augment_dataset.py` | เพิ่มข้อมูล (augmentation) ให้กับชุดข้อมูลที่ติด label แล้ว |
-| 10 | `04-train_yolo26n.py` | เทรนโมเดล YOLO |
-| 11 | `05-yolo-video-validation.py` | ตรวจสอบผลลัพธ์ของโมเดลกับวิดีโอ |
-| 12 | — | แปลงไฟล์โมเดลจาก `model.pt` เป็น `model.onnx` |
-
-### คำสั่งตามลำดับขั้นตอน
+| Demo Code | คำอธิบาย |
+|---|---|
+| `00-videorecord.py` | บันทึกวิดีโอ |
+| `01-video_extraction.py` | ดึงเฟรม/ภาพจากวิดีโอที่บันทึกไว้ |
+| `02-export_dataset.py` | Export Dataset จาก Label Studio |
+| `03-augment_dataset.py` | เพิ่มข้อมูล (augmentation) ให้กับชุดข้อมูลที่ติด label แล้ว |
+| `04-train_yolo26n.py` | Train YOLO Model |
+| `05-yolo-video-validation.py` | ทดสอบ YOLO Model กับวิดีโอ |
+| `06-onnx_convert.py` | แปลงไฟล์โมเดลจาก `model.pt` เป็น `model.onnx` |
 
 ```bash
-# 6. บันทึกวิดีโอ
+# 00. บันทึกวิดีโอ
 python 00-videorecord.py
 
-# 7. ดึงเฟรมจากวิดีโอ
+# 01. ดึงเฟรมจากวิดีโอ
 python 01-video_extraction.py
 
-# 8. เปิด Label Studio และติด label ภาพทั้งหมด
-label-studio
+# 02. Export Dataset จาก Label Studio
+python 02-export_dataset.py
 
-# 9. เพิ่มข้อมูล (augment) ให้ชุดข้อมูลที่ติด label แล้ว
+# 03. เพิ่มข้อมูล (augment) ให้ชุดข้อมูลที่ติด label แล้ว
 python 03-augment_dataset.py
 
-# 10. เทรนโมเดล YOLO
+# 04. เทรนโมเดล YOLO
 python 04-train_yolo26n.py
 
-# 11. ตรวจสอบผลลัพธ์ของโมเดลกับวิดีโอ
+# 05. ทดสอบโมเดลกับวิดีโอ
 python 05-yolo-video-validation.py
 
-# 12. แปลงโมเดลเป็น ONNX (ตัวอย่างการใช้ Ultralytics CLI)
-yolo export model=model.pt format=onnx
+# 06. แปลงโมเดลเป็น ONNX
+python 06-onnx_convert.py
 ```
 
 ---
 
-## หมายเหตุ
+# ส่วนที่ 2: การติดตั้งบน Raspberry Pi 5
 
-- **โหมดการนำเข้าข้อมูลใน Label Studio:** ให้ใช้ **Local Files Storage** แทนการอัปโหลดไฟล์โดยตรง สำหรับชุดข้อมูลขนาดใหญ่ และตั้งค่าโหมดการนำเข้าเป็น **"Files"** ไม่ใช่ **"Tasks (JSON/JSONL/Parquet)"**
-- **รูปแบบการ Export:** ฟังก์ชัน export ในตัวของ Label Studio อย่าง "YOLO with Images" / "COCO with Images" จะ**ไม่คัดลอกรูปภาพ**เมื่อใช้ Local Storage ให้ export เป็นไฟล์ JSON ธรรมดา แล้วใช้สคริปต์แปลงข้อมูลเองแทน
-- **ระบบพิกัด Bounding Box:** Label Studio จะ export bounding box เป็นเปอร์เซ็นต์ โดยอ้างอิงจากมุมซ้ายบน (0–100) ในขณะที่ YOLO ต้องการรูปแบบที่ normalize แล้วและอ้างอิงจากจุดกึ่งกลาง (0–1) ต้องแปลงค่าให้ถูกต้องตามรูปแบบนี้
-- ปิดการใช้งาน virtual environment เมื่อใช้งานเสร็จแล้ว:
-  ```bash
-  deactivate
-  ```
+ขั้นตอนนี้เป็นการเตรียม Raspberry Pi 5 ให้พร้อมสำหรับรันโมเดล ONNX ที่เทรนและแปลงไฟล์เสร็จแล้วจากเครื่องคอมพิวเตอร์หลัก
+
+## 1. เข้าสู่ระบบ Raspberry Pi ผ่าน SSH
+
+```bash
+ssh <username>@<raspberry-pi-ip>
+```
+
+---
+
+## 2. อัปเดตระบบ และเปิดการตั้งค่า VNC
+
+**อัปเดตระบบ**
+```bash
+sudo apt update && sudo apt upgrade -y
+```
+
+**เปิดใช้งาน VNC**
+```bash
+sudo raspi-config
+```
+เลือก **3 Interface Option** → **I3 VNC** → **Yes**
+
+---
+
+## 3. ติดตั้ง Python และไลบรารีที่จำเป็น
+
+```bash
+sudo apt install python3-venv
+sudo apt install python3-pip
+sudo apt install python3-dev
+sudo apt install libopenblas-dev
+sudo apt install libopenblas0
+sudo apt install cmake
+sudo apt install build-essential
+sudo apt update
+```
+
+> **หมายเหตุ:** บน Raspberry Pi OS Bookworm แพ็กเกจ `libatlas-base-dev` ถูกยกเลิกไปแล้ว ให้ใช้ `libopenblas-dev` และ `libopenblas0` แทน
+
+---
+
+## 4. สร้าง Python Virtual Environment
+
+```bash
+mkdir rmut
+cd rmut
+python3 -m venv onnx-env
+source onnx-env/bin/activate
+```
+
+---
+
+## 5. ติดตั้ง Python Packet-Site
+
+หลังจากเปิดใช้งาน virtual environment แล้ว ให้ติดตั้ง Packet-Site ที่จำเป็นดังนี้:
+
+```bash
+pip install --upgrade pip
+pip install torch torchvision torchaudio
+pip install ultralytics
+pip install onnxruntime
+pip install pillow
+pip install opencv-python
+pip install numpy
+pip install matplotlib
+```
+
+---
+
+## 6. ส่งไฟล์ .onnx จากเครื่องคอมพิวเตอร์ไปยัง Raspberry Pi
+
+```bash
+scp best.onnx <username>@<raspberry-pi-ip>:/home/<username>/rmut
+```
+
+ตัวอย่าง:
+
+```bash
+scp best.onnx rmuti-admin@172.17.11.254:/home/rmuti-admin/rmut
+```
+
+---
+
+## 7. ทดสอบโมเดลบน Raspberry Pi
+
+รันสคริปต์ inference เพื่อทดสอบโมเดลบนอุปกรณ์จริง:
+
+```bash
+python test_model_on_video_onnx.py
+```
+
+> **หมายเหตุ:** ควรตรวจสอบให้ค่า `IMG_SIZE` ในสคริปต์ inference ตรงกับค่า `imgsz` ที่ใช้ตอน export โมเดลเป็น ONNX เสมอ (ต้องเป็นตัวเลขที่หารด้วย 32 ลงตัว เช่น 320, 480) มิฉะนั้นจะเกิดข้อผิดพลาดที่ Concat layer
