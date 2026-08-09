@@ -269,10 +269,16 @@ scp best.onnx rmuti-admin@172.17.11.254:/home/rmuti-admin/rmut
 
 ## 7. ทดสอบโมเดลบน Raspberry Pi
 
-รันสคริปต์ inference เพื่อทดสอบโมเดลบนอุปกรณ์จริง:
+รันสคริปต์เพื่อทดสอบโมเดลบนอุปกรณ์จริง:
 
 ```bash
-python test_model_on_video_onnx.py
+python3 01-onnx_model_test.py
+```
+
+รันสคริปต์เพื่อทดสอบโมเดลบนอุปกรณ์จริง และประเมินผล:
+
+```bash
+python3 02-evaluate_model_accuracy.py
 ```
 
 > **หมายเหตุ:** ควรตรวจสอบให้ค่า `IMG_SIZE` ในสคริปต์ inference ตรงกับค่า `imgsz` ที่ใช้ตอน export โมเดลเป็น ONNX เสมอ (ต้องเป็นตัวเลขที่หารด้วย 32 ลงตัว เช่น 320, 480) มิฉะนั้นจะเกิดข้อผิดพลาดที่ Concat layer
