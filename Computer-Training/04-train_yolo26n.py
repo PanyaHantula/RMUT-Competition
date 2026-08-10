@@ -1,8 +1,9 @@
 import sys
 from pathlib import Path
+from datetime import datetime
 from ultralytics import YOLO
 
-DATA_YAML = Path("/Users/panya/Projects/RMUT/dataset/data.yaml")
+DATA_YAML = Path("D:\RMUT\dataset\data.yaml")
 MODEL_NAME = "yolo26n.pt"
 
 # ============================================================
@@ -13,9 +14,14 @@ EPOCHS = 30
 IMAGE_SIZE = 640
 BATCH_SIZE = 16
 DEVICE = "cpu"
-RUN_NAME = "rmut_yolo26n"
+RUN_NAME_PREFIX = "rmut_yolo26n"
 
 # ============================================================
+# Build a unique run name using the current date and time,
+# so every run is saved into its own separate folder.
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+RUN_NAME = f"{RUN_NAME_PREFIX}_{timestamp}"
+
 print(f"Loading base model: {MODEL_NAME}")
 model = YOLO(MODEL_NAME)
 
@@ -33,12 +39,9 @@ results = model.train(
     batch=BATCH_SIZE,
     device=DEVICE if DEVICE else None,
     name=RUN_NAME,
-  
+    exist_ok=False,
 )
 
 print("\nTraining finished.")
 print(f"Results and best weights saved under: runs/detect/{RUN_NAME}/")
 print(f"Best weights file: runs/detect/{RUN_NAME}/weights/best.pt")
-
-
-
