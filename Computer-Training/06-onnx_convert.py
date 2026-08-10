@@ -3,7 +3,7 @@ from ultralytics import YOLO
 CONFIG = {
     "model_path": "best.pt",
     "output_format": "onnx",
-    "imgsz": 480,        
+    "imgsz": 320,        
     "opset": 12,
     "simplify": True,
     "dynamic": False,
