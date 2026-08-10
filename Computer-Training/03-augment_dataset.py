@@ -3,7 +3,7 @@ from pathlib import Path
 import albumentations as A
 import cv2
 
-DATASET_DIR = Path("/Users/panya/Projects/RMUT/dataset")
+DATASET_DIR = Path(r"D:\RMUT\dataset")
 AUGMENTATIONS_PER_IMAGE = 3     # How many augmented copies to generate per original training image
 IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
 
