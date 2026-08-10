@@ -12,8 +12,8 @@ import onnxruntime as ort
 MODEL_PATH = "best.onnx"          # path to the exported ONNX model
 VIDEO_PATH = "VideoTest.mp4"      # path to the test video
 
-IMG_SIZE = 480                     # must match the size used at export/training
-CONF_THRESHOLD = 0.1
+IMG_SIZE = 320                     # must match the size used at export/training
+CONF_THRESHOLD = 0.2
 NUM_THREADS = 4                    # Raspberry Pi 4 has 4 cores
 
 SHOW_WINDOW = True                # this is a batch evaluation run; set True to also watch it live
