@@ -7,12 +7,13 @@ from urllib.parse import unquote, urlparse
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-IMAGES_DIR = Path("/Users/panya/Projects/RMUT/data/images")
-OUTPUT_DIR = Path("/Users/panya/Projects/RMUT/dataset")
+IMAGES_DIR = Path(r"D:\RMUT\data\images")
+OUTPUT_DIR = Path(r"D:\RMUT\dataset")
 TRAIN_SPLIT = 0.8
 SEED = 42
 
 def find_json_file(folder: Path) -> Path:
+    """Find the first .json file in the folder where this script is located."""
     json_files = sorted(folder.glob("*.json"))
     if not json_files:
         sys.exit(
@@ -27,6 +28,10 @@ def find_json_file(folder: Path) -> Path:
 
 
 def get_image_filename(task):
+    """
+    Extract the actual image filename (basename) from task['data'] in Label Studio.
+    Supports multiple formats: a direct 'image' key, local-files URL (?d=...), or a generic URL.
+    """
     data = task.get("data", {})
 
     image_value = None
@@ -48,13 +53,16 @@ def get_image_filename(task):
 
     parsed = urlparse(image_value)
     if "d=" in parsed.query:
-        rel_path = parsed.query.split("d=", 1)[1]
-        return unquote(Path(rel_path).name)
+        rel_path = unquote(parsed.query.split("d=", 1)[1])
+        # normalize both Windows (\) and POSIX (/) separators before taking the basename
+        rel_path = rel_path.replace("\\", "/")
+        return Path(rel_path).name
 
     return unquote(Path(parsed.path).name)
 
 
 def collect_classes(tasks):
+    """Scan all tasks for labels actually used, to build the class list."""
     classes = set()
     for task in tasks:
         for annotation in task.get("annotations", []):
@@ -69,6 +77,7 @@ def collect_classes(tasks):
 
 
 def convert_task_to_yolo_lines(task, class_to_id):
+    """Convert the annotations of one task into a list of YOLO format lines (<class_id> <cx> <cy> <w> <h>)."""
     lines = []
     for annotation in task.get("annotations", []):
         if annotation.get("was_cancelled"):
@@ -202,6 +211,7 @@ def main():
     print(f"\ndata.yaml and classes.txt written to: {OUTPUT_DIR}")
     print("Ready to train with Ultralytics, e.g.:")
     print(f'  yolo detect train data="{OUTPUT_DIR / "data.yaml"}" model=yolov8n.pt epochs=100')
+
 
 if __name__ == "__main__":
     main()
