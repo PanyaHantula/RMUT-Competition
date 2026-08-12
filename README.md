@@ -153,6 +153,7 @@ run script
 ```cmd
 python 04-train_yolo26n.py
 ```
+*** Dataset สำหรับหารทดสอบ https://drive.google.com/drive/folders/1FnUuDAgFUlI1vt-vqWDKEuJ8cFnXhnF2?usp=sharing
 
 ## 12. Validation Model
 run script
@@ -181,31 +182,6 @@ python 06-onnx_convert.py
 | 5 | `04-train_yolo26n.py` | เทรนโมเดล YOLO |
 | 6 | `05-yolo-video-validation.py` | ตรวจสอบผลลัพธ์ของโมเดลกับวิดีโอ |
 | 7 | `06-onnx_convert.py` | แปลงไฟล์โมเดลจาก `model.pt` เป็น `model.onnx` |
-
-### คำสั่งตามลำดับขั้นตอน
-
-```bash
-# 6. บันทึกวิดีโอ
-python 00-videorecord.py
-
-# 7. ดึงเฟรมจากวิดีโอ
-python 01-video_extraction.py
-
-# 8. เปิด Label Studio และติด label ภาพทั้งหมด
-label-studio
-
-# 9. เพิ่มข้อมูล (augment) ให้ชุดข้อมูลที่ติด label แล้ว
-python 03-augment_dataset.py
-
-# 10. เทรนโมเดล YOLO
-python 04-train_yolo26n.py
-
-# 11. ตรวจสอบผลลัพธ์ของโมเดลกับวิดีโอ
-python 05-yolo-video-validation.py
-
-# 12. แปลงโมเดลเป็น ONNX (ตัวอย่างการใช้ Ultralytics CLI)
-yolo export model=model.pt format=onnx
-```
 
 ---
 
