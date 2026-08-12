@@ -176,11 +176,11 @@ python 06-onnx_convert.py
 |------|--------|-------------|
 | 1  | `00-videorecord.py` | บันทึกวิดีโอต้นฉบับสำหรับชุดข้อมูล |
 | 2  | `01-video_extraction.py` | ดึงเฟรม/ภาพจากวิดีโอที่บันทึกไว้ |
-| 3  | `label-studio` | เปิดใช้งาน Label Studio และติด label ภาพ**ทั้งหมด**ในชุดข้อมูล |
+| 3  | `02-export_dataset.py` | เปิดใช้งาน Label Studio และติด label ภาพ**ทั้งหมด**ในชุดข้อมูล |
 | 4  | `03-augment_dataset.py` | เพิ่มข้อมูล (augmentation) ให้กับชุดข้อมูลที่ติด label แล้ว |
 | 5 | `04-train_yolo26n.py` | เทรนโมเดล YOLO |
 | 6 | `05-yolo-video-validation.py` | ตรวจสอบผลลัพธ์ของโมเดลกับวิดีโอ |
-| 7 | — | แปลงไฟล์โมเดลจาก `model.pt` เป็น `model.onnx` |
+| 7 | `06-onnx_convert.py` | แปลงไฟล์โมเดลจาก `model.pt` เป็น `model.onnx` |
 
 ### คำสั่งตามลำดับขั้นตอน
 
@@ -275,13 +275,7 @@ source onnx-env/bin/activate
 
 ```bash
 pip install --upgrade pip
-pip install torch torchvision torchaudio
-pip install ultralytics
-pip install onnxruntime
-pip install pillow
-pip install opencv-python
-pip install numpy
-pip install matplotlib
+pip install -r requirements.txt
 ```
 
 ---
